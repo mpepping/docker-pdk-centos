@@ -12,7 +12,6 @@ action "build-and-push-to-docker-hub" {
     "DOCKER_PASSWORD",
   ]
   env = {
-    DOCKER_IMAGE_NAME = "mpepping/pdk-validate",
-    DOCKER_IMAGE_TAG = "latest"
+    DOCKER_IMAGE_NAME = "mpepping/pdk-centos"
   }
 }
