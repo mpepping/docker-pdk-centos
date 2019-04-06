@@ -1,17 +1,21 @@
-workflow "Build and push to Docker Hub" {
+workflow "BuildTagPush to Docker Hub" {
   on = "push"
-  resolves = [
-    "build-and-push-to-docker-hub",
-  ]
+  resolves = ["Push"]
 }
 
-action "build-and-push-to-docker-hub" {
-  uses = "pangzineng/Github-Action-One-Click-Docker@master"
-  secrets = [
-    "DOCKER_USERNAME",
-    "DOCKER_PASSWORD",
-  ]
-  env = {
-    DOCKER_IMAGE_NAME = "pdk-centos"
-  }
+action "Docker Registry" {
+  uses = "actions/docker/login@c08a5fc9e0286844156fefff2c141072048141f6"
+  secrets = ["DOCKER_USERNAME", "DOCKER_PASSWORD"]
+}
+
+action "Build" {
+  uses = "actions/docker/cli@c08a5fc9e0286844156fefff2c141072048141f6"
+  needs = ["Docker Registry"]
+  args = "build -t mpepping/pdk-centos  ."
+}
+
+action "Push" {
+  uses = "actions/docker/cli@c08a5fc9e0286844156fefff2c141072048141f6"
+  args = "push mpepping/pdk-centos"
+  needs = ["Build"]
 }
